@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script crossorigin src= "https://unpkg.com/babel-standalone@6/babel.min.js"> </script>
+    <title></title>
+  </head>
+  <body>
+    <div id = "root">
+
+    </div>
+
+    <script type="text/babel">
+      var lecture = '';
+      class Datguel extends React.Component{
+        constructor(props){
+          super(props);
+          this.state = {
+            value : '',
+            count : 0,
+          };
+        }
+        submit = (e) => {
+          e.preventDefault();
+          var value = this.state.value + '\n';
+          this.setState({
+            value : '',
+            count : this.state.count + 1,
+          });
+          lecture = lecture + value;
+        }
+        render(){
+          return(
+          <React.Fragment>
+            <div> 댓글 달기 </div>
+            <form onSubmit = {this.submit}>
+              <input type="text" value={this.state.value} onChange = {(e) => {this.setState({value : e.target.value})}}/>
+              <button>등록하기</button>
+            </form>
+            <div>
+              총 {this.state.count} 개의 댓글이 달렸습니다.
+            </div>
+
+            <div>
+              <br />
+            {
+                lecture.split('\n').map(line => {
+                return (<span>{line}<br/></span>);
+              })
+            }
+            </div>
+          </React.Fragment>
+        );
+        }
+      }
+    </script>
+
+    <script type="text/babel">
+      ReactDOM.render(<Datguel />,document.getElementById('root'));
+    </script>
+  </body>
+</html>
