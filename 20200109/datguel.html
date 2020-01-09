@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <script crossorgin src="https://unpkg.com/react@16/umd/react.development.js"></script><!--배포할떄는 production으로 바꾸면 됨.-->
+    <script crossorgin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script> <!--document-->
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      let lecture = '';
+      class GuGuDan extends React.Component { //render 사용 못함. class 형태를 Component 형태로.
+        constructor(props){
+          super(props);
+          this.state = {  //변경 될 값을 설정.
+            value : '',
+            count : 0,
+        };
+      }
+
+      submit = (e) => {
+        e.preventDefault();
+        var value = this.state.value+'\n';
+        this.setState({
+          value : '',
+          count : this.state.count+1,
+        });
+        lecture += value ;
+      }
+      delete = (e) =>{
+        if(e.target.tagName==='SPAN'){
+        $(e.target).remove();
+        this.setState({
+          count : this.state.count - 1,
+        })
+      }
+        else{
+          $(e.target).remove();
+
+        }
+      }
+      update = (e) =>{
+        alert('댓글을 수정하시겠습니까?');
+        let changetext = prompt('수정할 댓글을 입력하세요!');
+        $(e.target).text(changetext);
+      }
+      respond = (e) => {
+        e.preventDefault();
+        alert('답글을 다시겠습니까?')
+        let respondtext = prompt('답글을 입력하세요!');
+        let list = document.createElement('li');
+        list.setAttribute('key','{$(e.target).text()}');
+        let text = document.createTextNode(respondtext);
+        list.appendChild(text);
+        if(e.target.tagName === 'LI'){
+          e.target.parentNode.appendChild(list);
+        }
+        else{
+          e.target.childNodes[2].appendChild(list);
+        }
+        this.setState({
+          value : '',
+        })
+
+      }
+      todo = (e) => {
+        let state = prompt('댓글 삭제는 1번, 댓글 수정은 2번 답글은 3번을 입력하세요!!');
+        if(state == 1){
+          this.delete(e);
+        }
+        else if(state == 2){
+          this.update(e);
+        }
+        else if(state == 3){
+          this.respond(e);
+        }
+      }
+      render(){ //태그 , render가 없으면 안됨. 계}속 호출된다.
+        return (
+        <div>
+        <div>댓글달기</div>
+        <form onSubmit = {this.submit} >
+          <input type="text" value={this.state.value}
+          onChange={(e)=> {this.setState({value: e.target.value})}} />
+          <button>댓글 달기</button>
+        </form>
+        <div>
+        총 {this.state.count} 개의 댓글이 달렸습니다.
+        </div>
+          <div>
+          <br />
+          {
+            lecture.split('\n').map( line => {
+              return (<span onClick={this.todo}>{line}<br/><ul> </ul></span>);
+            })
+          }
+          </div>
+
+        </div>
+        );
+      }
+    }
+
+    </script>
+    <script type="text/babel">
+      ReactDOM.render(<GuGuDan />, document.querySelector('#root'));
+    </script>
+  </body>
+</html>
